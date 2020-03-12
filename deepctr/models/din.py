@@ -87,7 +87,7 @@ def DIN(dnn_feature_columns, history_feature_list, dnn_use_bn=False,
                                          weight_normalization=att_weight_normalization, supports_masking=True)([
         query_emb, keys_emb])
 
-    deep_input_emb = Concatenate()([NoMask()(deep_input_emb), hist])
+    deep_input_emb = Concatenate()([NoMask()(deep_input_emb), hist])#concat the hist with deep_input_emb
     deep_input_emb = Flatten()(deep_input_emb)
     dnn_input = combined_dnn_input([deep_input_emb],dense_value_list)
     output = DNN(dnn_hidden_units, dnn_activation, l2_reg_dnn,
