@@ -65,11 +65,12 @@ def DIN(dnn_feature_columns, history_feature_list, dnn_use_bn=False,
 
     embedding_dict = create_embedding_matrix(dnn_feature_columns, l2_reg_embedding, init_std, seed, prefix="")
 
-
+    # for attention layer
     query_emb_list = embedding_lookup(embedding_dict, features, sparse_feature_columns, history_feature_list,
                                       history_feature_list,to_list=True)
     keys_emb_list = embedding_lookup(embedding_dict, features, history_feature_columns, history_fc_names,
                                      history_fc_names,to_list=True)
+    
     dnn_input_emb_list = embedding_lookup(embedding_dict, features, sparse_feature_columns,
                                           mask_feat_list=history_feature_list,to_list=True)
     dense_value_list = get_dense_input(features, dense_feature_columns)
@@ -85,7 +86,7 @@ def DIN(dnn_feature_columns, history_feature_list, dnn_use_bn=False,
     query_emb = concat_func(query_emb_list, mask=True)
     hist = AttentionSequencePoolingLayer(att_hidden_size, att_activation,
                                          weight_normalization=att_weight_normalization, supports_masking=True)([
-        query_emb, keys_emb])
+        query_emb, keys_emb]) # not use dense features
 
     deep_input_emb = Concatenate()([NoMask()(deep_input_emb), hist])
     deep_input_emb = Flatten()(deep_input_emb)
