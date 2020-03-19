@@ -37,12 +37,13 @@ def DeepFM(linear_feature_columns, dnn_feature_columns, fm_group=[DEFAULT_GROUP_
     :param task: str, ``"binary"`` for  binary logloss or  ``"regression"`` for regression loss
     :return: A Keras model instance.
     """
-
+    # return a ordered dict whose keys are feature names and values are unknown tensors
     features = build_input_features(
         linear_feature_columns + dnn_feature_columns)
 
     inputs_list = list(features.values())
 
+    #embed sparseFeat and varlenSparseFeat, denseFeat no transformation
     group_embedding_dict, dense_value_list = input_from_feature_columns(features, dnn_feature_columns, l2_reg_embedding,
                                                                         init_std, seed, support_group=True)
 
