@@ -40,7 +40,7 @@ def DIN(dnn_feature_columns, history_feature_list, dnn_use_bn=False,
 
     """
 
-
+    ## return a ordered dict whose keys are feature names and values are unknown tensors
     features = build_input_features(dnn_feature_columns)
 
     sparse_feature_columns = list(filter(lambda x:isinstance(x,SparseFeat),dnn_feature_columns)) if dnn_feature_columns else []
@@ -66,10 +66,11 @@ def DIN(dnn_feature_columns, history_feature_list, dnn_use_bn=False,
     embedding_dict = create_embedding_matrix(dnn_feature_columns, l2_reg_embedding, init_std, seed, prefix="")
 
     # for attention layer
-    query_emb_list = embedding_lookup(embedding_dict, features, sparse_feature_columns, history_feature_list,
-                                      history_feature_list,to_list=True)
-    keys_emb_list = embedding_lookup(embedding_dict, features, history_feature_columns, history_fc_names,
-                                     history_fc_names,to_list=True)
+    # sparse_embedding_dict, sparse_input_dict, sparse_feature_columns, return_feat_list=(),mask_feat_list=()
+    query_emb_list = embedding_lookup(embedding_dict, features, 
+                                      sparse_feature_columns, history_feature_list,history_feature_list,to_list=True)
+    keys_emb_list =  embedding_lookup(embedding_dict, features, 
+                                      history_feature_columns, history_fc_names,history_fc_names,to_list=True)
     
     dnn_input_emb_list = embedding_lookup(embedding_dict, features, sparse_feature_columns,
                                           mask_feat_list=history_feature_list,to_list=True)
